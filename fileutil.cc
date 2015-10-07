@@ -56,6 +56,38 @@ double GetTimestamp(StringPiece filename) {
 
 int RunCommand(const string& shell, const string& cmd,
                RedirectStderr redirect_stderr,
+               int out_fd) {
+  int pid;
+  if ((pid = vfork())) {
+    int status;
+    int result = waitpid(pid, &status, 0);
+    if (result < 0)
+      PERROR("waitpid failed");
+
+    return status;
+  } else {
+    if (redirect_stderr == RedirectStderr::STDOUT) {
+      if (dup2(out_fd, 2) < 0)
+        PERROR("dup2 failed");
+    } else if (redirect_stderr == RedirectStderr::DEV_NULL) {
+      int fd = open("/dev/null", O_WRONLY);
+      if (dup2(fd, 2) < 0)
+        PERROR("dup2 failed");
+      close(fd);
+    }
+    if (dup2(out_fd, 1) < 0)
+      PERROR("dup2 failed");
+
+    const char* argv[] = {
+      shell.c_str(), "-c", cmd.c_str(), NULL
+    };
+    execvp(argv[0], const_cast<char**>(argv));
+  }
+  abort();
+}
+
+int RunCommand(const string& shell, const string& cmd,
+               RedirectStderr redirect_stderr,
                string* s) {
   int pipefd[2];
   if (pipe(pipefd) != 0)

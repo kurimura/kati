@@ -104,11 +104,9 @@ class Executor {
         fflush(stdout);
       }
       if (!g_flags.is_dry_run) {
-        string out;
         int result = RunCommand(shell_, command->cmd.c_str(),
                                 RedirectStderr::STDOUT,
-                                &out);
-        printf("%s", out.c_str());
+                                1);
         if (result != 0) {
           if (command->ignore_error) {
             fprintf(stderr, "[%s] Error %d (ignored)\n",
