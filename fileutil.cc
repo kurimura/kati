@@ -140,7 +140,7 @@ class GlobCache {
   }
 
   void Get(const char* pat, vector<string>** files) {
-    auto p = cache_.emplace(pat, nullptr);
+    auto p = cache_.insert(std::make_pair(pat, nullptr));
     if (p.second) {
       vector<string>* files = p.first->second = new vector<string>;
       if (strcspn(pat, "?*[\\") != strlen(pat)) {

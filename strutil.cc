@@ -408,7 +408,7 @@ StringPiece TrimLeadingCurdir(StringPiece s) {
 
 void FormatForCommandSubstitution(string* s) {
   while ((*s)[s->size()-1] == '\n')
-    s->pop_back();
+    s->resize(s->size()-1);
   for (size_t i = 0; i < s->size(); i++) {
     if ((*s)[i] == '\n')
       (*s)[i] = ' ';

@@ -42,7 +42,7 @@ class MakefileCacheManagerImpl : public MakefileCacheManager {
     }
   }
 
-  virtual Makefile* ReadMakefile(const string& filename) override {
+  virtual Makefile* ReadMakefile(const string& filename) {
     Makefile* result = NULL;
     auto p = cache_.insert(make_pair(filename, result));
     if (p.second) {
@@ -53,7 +53,7 @@ class MakefileCacheManagerImpl : public MakefileCacheManager {
     return result;
   }
 
-  virtual void GetAllFilenames(unordered_set<string>* out) override {
+  virtual void GetAllFilenames(unordered_set<string>* out) {
     for (const auto& p : cache_)
       out->insert(p.first);
   }

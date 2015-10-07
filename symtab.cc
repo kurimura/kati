@@ -65,7 +65,7 @@ class Symtab {
     }
     symbols_.push_back(new string(s.data(), s.size()));
     Symbol sym = Symbol(symtab_.size());
-    bool ok = symtab_.emplace(*symbols_.back(), sym).second;
+    bool ok = symtab_.insert(std::make_pair(*symbols_.back(), sym)).second;
     CHECK(ok);
     return sym;
   }

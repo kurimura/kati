@@ -35,10 +35,10 @@
 
 class FindCond {
  public:
-  virtual ~FindCond() = default;
+  virtual ~FindCond(){};
   virtual bool IsTrue(const string& name, unsigned char type) const = 0;
  protected:
-  FindCond() = default;
+  FindCond(){}
 };
 
 namespace {
@@ -109,7 +109,7 @@ class OrCond : public FindCond {
 
 class DirentNode {
  public:
-  virtual ~DirentNode() = default;
+  virtual ~DirentNode() {};
 
   virtual const DirentNode* FindDir(StringPiece) const {
     return NULL;
@@ -653,7 +653,7 @@ class FindEmulatorImpl : public FindEmulator {
     g_instance = this;
   }
 
-  virtual ~FindEmulatorImpl() = default;
+  virtual ~FindEmulatorImpl() {}
 
   bool CanHandle(StringPiece s) const {
     return (!HasPrefix(s, "../") &&
@@ -664,7 +664,7 @@ class FindEmulatorImpl : public FindEmulator {
   }
 
   virtual bool HandleFind(const string& cmd UNUSED, const FindCommand& fc,
-                          string* out) override {
+                          string* out) {
     if (!CanHandle(fc.chdir)) {
       LOG("FindEmulator: Cannot handle chdir (%.*s): %s",
           SPF(fc.chdir), cmd.c_str());

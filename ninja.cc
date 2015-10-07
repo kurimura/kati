@@ -594,7 +594,7 @@ class NinjaGenerator {
 
     for (Symbol e : Vars::used_env_vars()) {
       StringPiece val(getenv(e.c_str()));
-      used_envs_.emplace(e.str(), val.as_string());
+      used_envs_.insert(std::make_pair(e.str(), val.as_string()));
     }
 
     string default_targets;

@@ -65,7 +65,7 @@ class RuleTrie {
       return;
     }
     const char c = name[0];
-    auto p = children_.emplace(c, nullptr);
+    auto p = children_.insert(std::make_pair(c, nullptr));
     if (p.second) {
       p.first->second = new RuleTrie();
     }
@@ -511,7 +511,7 @@ class DepBuilder {
             continue;
           }
         }
-        sv.emplace_back(new ScopedVar(cur_rule_vars_.get(), name, new_var));
+        sv.push_back(std::unique_ptr<ScopedVar>(new ScopedVar(cur_rule_vars_.get(), name, new_var)));
       }
     }
 

@@ -58,11 +58,11 @@ class Literal : public Value {
 
   StringPiece val() const { return s_; }
 
-  virtual void Eval(Evaluator*, string* s) const override {
+  virtual void Eval(Evaluator*, string* s) const {
     s->append(s_.begin(), s_.end());
   }
 
-  virtual string DebugString_() const override {
+  virtual string DebugString_() const {
     return s_.as_string();
   }
 
@@ -86,13 +86,13 @@ class Expr : public Value {
     vals_.push_back(v);
   }
 
-  virtual void Eval(Evaluator* ev, string* s) const override {
+  virtual void Eval(Evaluator* ev, string* s) const {
     for (Value* v : vals_) {
       v->Eval(ev, s);
     }
   }
 
-  virtual string DebugString_() const override {
+  virtual string DebugString_() const {
     string r;
     for (Value* v : vals_) {
       if (r.empty()) {
@@ -129,12 +129,12 @@ class SymRef : public Value {
   virtual ~SymRef() {
   }
 
-  virtual void Eval(Evaluator* ev, string* s) const override {
+  virtual void Eval(Evaluator* ev, string* s) const {
     Var* v = ev->LookupVar(name_);
     v->Eval(ev, s);
   }
 
-  virtual string DebugString_() const override {
+  virtual string DebugString_() const {
     return StringPrintf("SymRef(%s)", name_.c_str());
   }
 
@@ -151,13 +151,13 @@ class VarRef : public Value {
     delete name_;
   }
 
-  virtual void Eval(Evaluator* ev, string* s) const override {
+  virtual void Eval(Evaluator* ev, string* s) const {
     const string&& name = name_->Eval(ev);
     Var* v = ev->LookupVar(Intern(name));
     v->Eval(ev, s);
   }
 
-  virtual string DebugString_() const override {
+  virtual string DebugString_() const {
     return StringPrintf("VarRef(%s)", name_->DebugString().c_str());
   }
 
@@ -176,7 +176,7 @@ class VarSubst : public Value {
     delete subst_;
   }
 
-  virtual void Eval(Evaluator* ev, string* s) const override {
+  virtual void Eval(Evaluator* ev, string* s) const {
     const string&& name = name_->Eval(ev);
     Var* v = ev->LookupVar(Intern(name));
     const string&& value = v->Eval(ev);
@@ -190,7 +190,7 @@ class VarSubst : public Value {
     }
   }
 
-  virtual string DebugString_() const override {
+  virtual string DebugString_() const {
     return StringPrintf("VarSubst(%s:%s=%s)",
                         name_->DebugString().c_str(),
                         pat_->DebugString().c_str(),
@@ -214,12 +214,12 @@ class Func : public Value {
       delete a;
   }
 
-  virtual void Eval(Evaluator* ev, string* s) const override {
+  virtual void Eval(Evaluator* ev, string* s) const {
     LOG("Invoke func %s(%s)", name(), JoinValues(args_, ",").c_str());
     fi_->func(args_, ev, s);
   }
 
-  virtual string DebugString_() const override {
+  virtual string DebugString_() const {
     return StringPrintf("Func(%s %s)",
                         fi_->name,
                         JoinValues(args_, ",").c_str());

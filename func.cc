@@ -578,17 +578,17 @@ void CallFunc(const vector<Value*>& args, Evaluator* ev, string* s) {
       tmpvar_name = s;
     }
     if (i < args.size()) {
-      sv.emplace_back(new ScopedVar(ev->mutable_vars(),
-                                    Intern(tmpvar_name), av[i-1].get()));
+      sv.push_back(std::unique_ptr<ScopedVar>(new ScopedVar(ev->mutable_vars(),
+                                    Intern(tmpvar_name), av[i-1].get())));
     } else {
       // We need to blank further automatic vars
       Var *v = ev->LookupVar(Intern(tmpvar_name));
       if (!v->IsDefined()) break;
       if (v->Origin() != VarOrigin::AUTOMATIC) break;
 
-      av.emplace_back(new SimpleVar("", VarOrigin::AUTOMATIC));
-      sv.emplace_back(new ScopedVar(ev->mutable_vars(),
-                                    Intern(tmpvar_name), av[i-1].get()));
+      av.push_back(std::unique_ptr<SimpleVar>(new SimpleVar("", VarOrigin::AUTOMATIC)));
+      sv.push_back(std::unique_ptr<ScopedVar>(new ScopedVar(ev->mutable_vars(),
+                                    Intern(tmpvar_name), av[i-1].get())));
     }
   }
   func->Eval(ev, s);
@@ -702,7 +702,7 @@ void InitFuncTable() {
   g_func_info_map = new unordered_map<StringPiece, FuncInfo*>;
   for (size_t i = 0; i < sizeof(g_func_infos) / sizeof(g_func_infos[0]); i++) {
     FuncInfo* fi = &g_func_infos[i];
-    bool ok = g_func_info_map->emplace(fi->name, fi).second;
+    bool ok = g_func_info_map->insert(std::make_pair(fi->name, fi)).second;
     CHECK(ok);
   }
 }

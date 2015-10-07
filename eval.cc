@@ -133,7 +133,7 @@ void Evaluator::EvalRule(const RuleStmt* stmt) {
   }
 
   for (Symbol output : rule_var.outputs) {
-    auto p = rule_vars_.emplace(output, nullptr);
+    auto p = rule_vars_.insert(std::make_pair(output, nullptr));
     if (p.second) {
       p.first->second = new Vars;
     }

@@ -71,13 +71,13 @@ class SimpleVar : public Var {
     return origin_;
   }
 
-  virtual void Eval(Evaluator* ev, string* s) const override;
+  virtual void Eval(Evaluator* ev, string* s) const;
 
   virtual void AppendVar(Evaluator* ev, Value* v);
 
-  virtual StringPiece String() const override;
+  virtual StringPiece String() const;
 
-  virtual string DebugString() const override;
+  virtual string DebugString() const;
 
  private:
   string v_;
@@ -95,13 +95,13 @@ class RecursiveVar : public Var {
     return origin_;
   }
 
-  virtual void Eval(Evaluator* ev, string* s) const override;
+  virtual void Eval(Evaluator* ev, string* s) const;
 
   virtual void AppendVar(Evaluator* ev, Value* v);
 
-  virtual StringPiece String() const override;
+  virtual StringPiece String() const;
 
-  virtual string DebugString() const override;
+  virtual string DebugString() const;
 
  private:
   Value* v_;
@@ -121,11 +121,11 @@ class UndefinedVar : public Var {
   }
   virtual bool IsDefined() const { return false; }
 
-  virtual void Eval(Evaluator* ev, string* s) const override;
+  virtual void Eval(Evaluator* ev, string* s) const;
 
-  virtual StringPiece String() const override;
+  virtual StringPiece String() const;
 
-  virtual string DebugString() const override;
+  virtual string DebugString() const;
 };
 
 extern UndefinedVar* kUndefined;
@@ -153,10 +153,10 @@ class RuleVar : public Var {
   virtual void AppendVar(Evaluator* ev, Value* v) {
     v_->AppendVar(ev, v);
   }
-  virtual StringPiece String() const override {
+  virtual StringPiece String() const {
     return v_->String();
   }
-  virtual string DebugString() const override {
+  virtual string DebugString() const {
     return v_->DebugString();
   }
 

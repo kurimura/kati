@@ -30,27 +30,27 @@ namespace {
 
 class AutoVar : public Var {
  public:
-  virtual const char* Flavor() const override {
+  virtual const char* Flavor() const {
     return "undefined";
   }
-  virtual VarOrigin Origin() const override {
+  virtual VarOrigin Origin() const {
     return VarOrigin::AUTOMATIC;
   }
 
-  virtual void AppendVar(Evaluator*, Value*) override { CHECK(false); }
+  virtual void AppendVar(Evaluator*, Value*) { CHECK(false); }
 
-  virtual StringPiece String() const override {
+  virtual StringPiece String() const {
     ERROR("$(value %s) is not implemented yet", sym_);
     return "";
   }
 
-  virtual string DebugString() const override {
+  virtual string DebugString() const {
     return string("AutoVar(") + sym_ + ")";
   }
 
  protected:
   AutoVar(CommandEvaluator* ce, const char* sym) : ce_(ce), sym_(sym) {}
-  virtual ~AutoVar() = default;
+  virtual ~AutoVar() {};
 
   CommandEvaluator* ce_;
   const char* sym_;
@@ -61,8 +61,8 @@ class AutoVar : public Var {
    public:                                                              \
    name(CommandEvaluator* ce, const char* sym)                          \
        : AutoVar(ce, sym) {}                                            \
-   virtual ~name() = default;                                           \
-   virtual void Eval(Evaluator* ev, string* s) const override;          \
+   virtual ~name(){}                                           \
+   virtual void Eval(Evaluator* ev, string* s) const;          \
   }
 
 DECLARE_AUTO_VAR_CLASS(AutoAtVar);
@@ -76,8 +76,8 @@ class AutoSuffixDVar : public AutoVar {
   AutoSuffixDVar(CommandEvaluator* ce, const char* sym, Var* wrapped)
       : AutoVar(ce, sym), wrapped_(wrapped) {
   }
-  virtual ~AutoSuffixDVar() = default;
-  virtual void Eval(Evaluator* ev, string* s) const override;
+  virtual ~AutoSuffixDVar(){}
+  virtual void Eval(Evaluator* ev, string* s) const;
 
  private:
   Var* wrapped_;
@@ -87,8 +87,8 @@ class AutoSuffixFVar : public AutoVar {
  public:
   AutoSuffixFVar(CommandEvaluator* ce, const char* sym, Var* wrapped)
       : AutoVar(ce, sym), wrapped_(wrapped) {}
-  virtual ~AutoSuffixFVar() = default;
-  virtual void Eval(Evaluator* ev, string* s) const override;
+  virtual ~AutoSuffixFVar(){}
+  virtual void Eval(Evaluator* ev, string* s) const;
 
  private:
   Var* wrapped_;
